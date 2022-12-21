@@ -6,39 +6,31 @@ import {
   Req,
   UseGuards,
   Get,
+  HttpCode,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
-import { AccessJwtAuthGuard } from './guards/access-jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { RefreshJwtAuthGuard } from './guards/refresh-jwt-auth.guard';
 import { Request, Response } from 'express';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  async register(
-    @Body() createUserDto: CreateUserDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    return this.authService.register(createUserDto, res);
+  async register(@Body() createUserDto: CreateUserDto) {
+    return this.authService.register(createUserDto);
   }
 
-  @Post('logIn')
+  @Post('login')
+  @HttpCode(200)
   @UseGuards(LocalAuthGuard)
-  async logIn(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.authService.logIn(req.user, res);
+  async logIn(@Req() req: Request) {
+    return this.authService.logIn(req.user);
   }
 
   @Post('refreshToken')
-  @UseGuards(RefreshJwtAuthGuard)
-  async refreshTokens(@Req() req: Request) {
-    return await this.authService.refreshToken(req.user);
-  }
-  @Get('test')
-  @UseGuards(AccessJwtAuthGuard)
-  async test(@Req() req: Request) {
-    return await this.authService.test(req.user);
+  @HttpCode(200)
+  async refreshTokens(@Body() body) {
+    return await this.authService.refreshToken(body.refresh_token);
   }
 }

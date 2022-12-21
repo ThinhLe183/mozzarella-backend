@@ -1,4 +1,10 @@
-import { IsNotEmpty, MaxLength, MinLength, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  MaxLength,
+  MinLength,
+  IsString,
+  IsEnum,
+} from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -16,4 +22,6 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   name: string;
+
+  role: any;
 }

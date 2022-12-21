@@ -7,7 +7,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AcJwtStrategy } from './strategies/ac-jwt.strategy';
-import { RfJwtStrategy } from './strategies/rf-jwt.strategy';
+import { JwtConfigService } from 'src/configs/jwtConfig.service';
 
 @Module({
   providers: [
@@ -15,7 +15,7 @@ import { RfJwtStrategy } from './strategies/rf-jwt.strategy';
     LocalStrategy,
     ConfigService,
     AcJwtStrategy,
-    RfJwtStrategy,
+    JwtConfigService,
   ],
   controllers: [AuthController],
   imports: [
@@ -26,5 +26,6 @@ import { RfJwtStrategy } from './strategies/rf-jwt.strategy';
       signOptions: { expiresIn: process.env.JWT_ACCESS_SECRET_EXPIRE },
     }),
   ],
+  exports: [AuthService],
 })
 export class AuthModule {}
